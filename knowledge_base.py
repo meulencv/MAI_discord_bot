@@ -5,7 +5,7 @@ El agente decide cuándo necesita cargar contexto adicional.
 """
 
 # Contextos disponibles que el agente puede solicitar
-AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra", "redes", "descargas", "donar"]
+AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra", "redes", "descargas", "donar", "tutoriales"]
 
 # Base de conocimiento (solo se carga cuando el agente lo pide)
 KNOWLEDGE_DATA = {
@@ -14,7 +14,7 @@ KNOWLEDGE_DATA = {
 • App gratuita con MÍNIMOS anuncios
 • Solo 1 anuncio obligatorio cada 24 horas (puedes evitarlo gastando 1 Goat)
 • ANDROID: Disponible en Google Play Store y como APK
-• iOS: Beta privada disponible, próximamente en App Store
+• iOS (TestFlight): SOLO accesible si rellenaste el formulario y recibiste el email de confirmación.
 • Actualmente en fase beta - feedback bienvenido
 • Web oficial: meulify.top
 • 100% gratis, se financia con donaciones de la comunidad
@@ -77,30 +77,35 @@ KNOWLEDGE_DATA = {
 
     "redes": """
 📱 **REDES SOCIALES DE MEULIFY**
-> 🎵 TikTok: https://tiktok.com/@meulify
-> 📸 Instagram: https://instagram.com/meulify.top
-> ✈️ Telegram: https://t.me/meulify
-¡Síguenos para novedades, memes y contenido exclusivo!
+> 🎵 TikTok: Busca @meulify
+> 📸 Instagram: Busca meulify.top
+> ✈️ Telegram: Busca meulify
+¡Síguenos para novedades, memes y contenido exclusivo! (Enlaces en meulify.top)
 """,
 
     "descargas": """
 📥 **DÓNDE DESCARGAR MEULIFY**
-> 🤖 Android (Play Store): https://play.google.com/store/apps/details?id=com.meulify.app
-> 🌌 Samsung Galaxy Store: Busca "Meulify"
-> 📦 APK directo: https://meulify.top
-> 🍎 iOS: Beta privada (próximamente en App Store)
+> 🤖 Android y APK
+> 🌌 Samsung Galaxy Store
+> 🍎 iOS (Beta TestFlight): REQUIERE haber rellenado formulario y recibido EMAIL de acceso.
+👉 Todo disponible oficial y seguro en: https://meulify.top
 """,
 
     "donar": """
 💝 **APOYAR A MEULIFY**
-> ☕ Ko-fi: https://ko-fi.com/meulify
+> ☕ Puedes invitarnos a un café (Ko-fi)
 
 Las donaciones ayudan a:
 • Mantener los servidores
 • Desarrollar nuevas funciones
 • Que La Cabra 🐐 pueda seguir trabajando en esto
-
 Es 100% voluntario, la app siempre será gratis 🙏
+""",
+
+    "tutoriales": """
+📚 **TUTORIALES Y AYUDA**
+• **Portadas Animadas**: ¿Quieres que tu música se vea increíble?
+  > Mira este tutorial de cómo crear portadas animadas: https://www.youtube.com/watch?v=TI42u0pECcA&t=1s
 """,
 }
 

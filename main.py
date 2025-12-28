@@ -128,7 +128,8 @@ async def on_message(message):
                 return "\n".join(results[:total_limit])
 
             # Prepare channel list for agent context (Based on USER permissions)
-            channel_names = [c.name for c in message.guild.text_channels 
+            # Send format: "channel_name (<#channel_id>)" so LLM knows how to link
+            channel_names = [f"{c.name} (<#{c.id}>)" for c in message.guild.text_channels 
                            if c.permissions_for(message.guild.me).read_messages 
                            and c.permissions_for(message.author).read_messages]
             
@@ -196,6 +197,10 @@ async def on_message(message):
             
             # Add AI disclaimer footer
             disclaimer = "\n\n-# *Respuesta generada por IA. Puede contener errores.*"
+            
+            # SAFETY FILTER: Force correct domain
+            response = response.replace("meulify.com", "meulify.top")
+            
             await message.reply(response + disclaimer)
 
     # Allow processing of commands if any
