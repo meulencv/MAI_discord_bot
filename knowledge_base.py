@@ -11,7 +11,8 @@ AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra
 KNOWLEDGE_DATA = {
     "meulify": """
 🎵 MEULIFY - Reproductor de Música
-• App gratuita SIN anuncios ni suscripciones
+• App gratuita con MÍNIMOS anuncios
+• Solo 1 anuncio obligatorio cada 24 horas (puedes evitarlo gastando 1 Goat)
 • ANDROID: Disponible en Google Play Store y como APK
 • iOS: Beta privada disponible, próximamente en App Store
 • Actualmente en fase beta - feedback bienvenido
@@ -33,7 +34,8 @@ KNOWLEDGE_DATA = {
 
     "features": """
 ✨ CARACTERÍSTICAS DE MEULIFY
-• Reproducción sin interrupciones (0 anuncios)
+• Reproducción casi sin interrupciones
+• Solo 1 anuncio al día (saltable con Goats)
 • Listas de reproducción ILIMITADAS
 • Interfaz moderna y fácil de usar
 • Navegación rápida y fluida
@@ -55,8 +57,9 @@ KNOWLEDGE_DATA = {
 🐐 SISTEMA DE GOATS (Cabras)
 • Moneda virtual dentro de Meulify
 • Se llaman así en honor a La Cabra, nuestro creador
-• Se ganan viendo anuncios opcionales
+• Se usan para saltar el anuncio diario obligatorio
 • Desbloquean funciones sociales y personalización
+• Se ganan viendo anuncios voluntarios
 • NO hay contenido de pago obligatorio
 • Sistema 100% opcional para apoyar la app
 """,
