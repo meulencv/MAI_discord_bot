@@ -50,6 +50,10 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
+    # PRIVACY PROTECTION: Ignore Ticket Channels
+    if "ticket" in message.channel.name.lower():
+        return
+
     # Check if bot is mentioned
     if bot.user.mentioned_in(message) and not message.mention_everyone:
         async with message.channel.typing():
