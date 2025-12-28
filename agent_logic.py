@@ -8,9 +8,14 @@ from knowledge_base import get_context, get_context_menu
 logger = logging.getLogger('MAI_Logic')
 
 class AgentLogic:
-    # Modelos fijos para ahorrar tokens
-    MODEL_FAST = "llama-3.1-8b-instant"      # Para respuestas simples (menos tokens)
-    MODEL_SMART = "openai/gpt-oss-120b"      # Modelo solicitado por usuario
+    # Lista de prioridades para fallback (De mejor a peor/más rápido)
+    FALLBACK_MODELS = [
+        "openai/gpt-oss-120b",          # 1. Principal (Potente)
+        "llama-3.3-70b-versatile",      # 2. Muy Inteligente
+        "mixtral-8x7b-32768",          # 3. Buen razonamiento
+        "qwen/qwen3-32b",              # 4. Equilibrado
+        "llama-3.1-8b-instant"          # 5. Rápido (último recurso)
+    ]
     
     def __init__(self):
         self.groq_api_key = os.getenv('GROQ_API_KEY')
@@ -18,36 +23,48 @@ class AgentLogic:
             logger.warning("GROQ_API_KEY is missing!")
         
         # REMOVED ChromaDB initialization to save space (4GB -> <500MB)
-        # self.chroma_client = chromadb.PersistentClient(path="./mai_memory")
-        # self.collection = self.chroma_client.get_or_create_collection(name="knowledge_base")
+        logger.info(f"MAI Logic initialized. Fallback chain size: {len(self.FALLBACK_MODELS)}")
+
+    def _get_llm(self, model_name):
+        """Get LLM instance with specific model."""
+        return ChatGroq(temperature=0.7, model_name=model_name, groq_api_key=self.groq_api_key)
+
+    async def _try_invoke_with_fallback(self, messages):
+        """Intenta ejecutar el prompt probando modelos en orden si falla por rate limit."""
+        last_error = None
         
-        logger.info(f"MAI Logic initialized. Fast model: {self.MODEL_FAST}, Smart model: {self.MODEL_SMART}")
-
-    def _get_llm(self, use_smart=False):
-        """Get LLM instance based on task complexity."""
-        model = self.MODEL_SMART if use_smart else self.MODEL_FAST
-        return ChatGroq(temperature=0.7, model_name=model, groq_api_key=self.groq_api_key)  # 0.7 para más personalidad
-
-    def learn_from_text(self, texts, source):
-        """Simple indexing of text lines."""
-        # DISABLED for now to save space
-        pass 
+        for model in self.FALLBACK_MODELS:
+            try:
+                # logger.info(f"Intentando generar respuesta con modelo: {model}")
+                llm = self._get_llm(model)
+                response = await llm.ainvoke(messages)
+                if response:
+                    return response
+            except Exception as e:
+                error_str = str(e)
+                if "429" in error_str or "rate_limit" in error_str.lower():
+                    logger.warning(f"⚠️ RATE LIMIT en {model}. Cambiando al siguiente...")
+                    last_error = e
+                    continue # Try next model
+                else:
+                    # Si es otro error (ej: prompt muy largo), lanzarlo
+                    logger.error(f"Error crítico en {model}: {e}")
+                    raise e
+        
+        # Si se acaban los modelos
+        raise last_error
 
     async def process_query(self, query, user_name, available_channels=[], server_stats={}, is_ticket=False, chat_history="", search_tool=None, current_channel="", status_callback=None, reaction_callback=None):
         """Main RAG Logic with Smart Search Capability and Anti-Hallucination Guards."""
         
-        # 1. Retrieve relevant info (NOW USING LIGHTWEIGHT SYSTEM ONLY)
-        # results = self.collection.query(query_texts=[query], n_results=3)
-        # retrieved_context = "\n".join(results['documents'][0]) if results['documents'] and results['documents'][0] else ""
+        # ... (rest of context preparation) ...
+        # (I will keep the context preparation logic, just modifying the execution part)
+        
+        # ... [Pre-computation similar to before] ...
+        
         retrieved_context = "" # Disabled heavy RAG
-        
-        # Get server name for context
         server_name = server_stats.get("Server Name", "este servidor")
-        
-        # Format channel list with clear structure
         channels_str = "\n".join([f"  • {c}" for c in available_channels]) if available_channels else "  (ninguno visible)"
-        
-        # Format stats with clear structure
         stats_str = "\n".join([f"  • {k}: {v}" for k, v in server_stats.items()]) if server_stats else "  (sin estadísticas)"
         
         # Format History with clear labeling as UNRELIABLE CONTEXT
@@ -57,12 +74,11 @@ class AgentLogic:
 ⚠️ REGLA: Si este historial contradice a tu BASE DE CONOCIMIENTO, ignóralo. Tu base es la verdad.
 {chat_history}""" if chat_history else ""
 
-        # Knowledge section (only ChromaDB, Meulify is on-demand now)
+        # Knowledge section
         knowledge_section = f"""
 ═══ BASE DE CONOCIMIENTO ═══
 {retrieved_context}""" if retrieved_context else ""
 
-        # IMPROVED SYSTEM PROMPT with personality and anti-hallucination rules
         current_channel_info = f"\n  📍 Canal actual: #{current_channel}" if current_channel else ""
         
         system_prompt = f"""## IDENTIDAD Y PERSONALIDAD
@@ -190,11 +206,11 @@ Pregunta: {query}
         logger.info(f"Query from {user_name} | Channels: {len(available_channels)} | Has history: {bool(chat_history)}")
         
         try:
-            llm = self._get_llm(use_smart=True)
-            response_msg = await llm.ainvoke(messages)
+            # TRY INVOKE WITH FALLBACK LOGIC
+            response_msg = await self._try_invoke_with_fallback(messages)
             response = str(response_msg.content)
-
-            # Check if CONTEXT is requested (agent wants Meulify info)
+            
+            # ... (rest of search/context processing with _try_invoke_with_fallback instead of direct llm.ainvoke)
             if "CONTEXT:" in response:
                 try:
                     context_part = response.split("CONTEXT:", 1)[1].strip()
@@ -216,7 +232,7 @@ Usa esta información para dar una respuesta útil y completa.
                     messages.append(SystemMessage(content=context_feedback))
                     
                     # Final Answer with context
-                    final_response_msg = await llm.ainvoke(messages)
+                    final_response_msg = await self._try_invoke_with_fallback(messages)
                     return final_response_msg.content
 
                 except Exception as parse_error:
@@ -264,7 +280,7 @@ Ahora responde la pregunta original del usuario: "{query}"
                     messages.append(SystemMessage(content=search_feedback))
                     
                     # Final Answer
-                    final_response_msg = await llm.ainvoke(messages)
+                    final_response_msg = await self._try_invoke_with_fallback(messages)
                     return final_response_msg.content
 
                 except Exception as parse_error:
