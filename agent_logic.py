@@ -1,7 +1,7 @@
 import os
 # import chromadb # REMOVED for lighter deployment
 from langchain_groq import ChatGroq
-from langchain.schema import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 import logging
 from knowledge_base import get_context, get_context_menu
 
