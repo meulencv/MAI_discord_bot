@@ -1,5 +1,5 @@
 import os
-import chromadb
+# import chromadb # REMOVED for lighter deployment
 from langchain_groq import ChatGroq
 from langchain.schema import SystemMessage, HumanMessage
 import logging
@@ -17,9 +17,9 @@ class AgentLogic:
         if not self.groq_api_key:
             logger.warning("GROQ_API_KEY is missing!")
         
-        # Initialize ChromaDB (Persistent storage)
-        self.chroma_client = chromadb.PersistentClient(path="./mai_memory")
-        self.collection = self.chroma_client.get_or_create_collection(name="knowledge_base")
+        # REMOVED ChromaDB initialization to save space (4GB -> <500MB)
+        # self.chroma_client = chromadb.PersistentClient(path="./mai_memory")
+        # self.collection = self.chroma_client.get_or_create_collection(name="knowledge_base")
         
         logger.info(f"MAI Logic initialized. Fast model: {self.MODEL_FAST}, Smart model: {self.MODEL_SMART}")
 
@@ -30,22 +30,16 @@ class AgentLogic:
 
     def learn_from_text(self, texts, source):
         """Simple indexing of text lines."""
-        ids = [f"{source}_{i}" for i in range(len(texts))]
-        metadatas = [{"source": source} for _ in range(len(texts))]
-        
-        self.collection.add(
-            documents=texts,
-            metadatas=metadatas,
-            ids=ids
-        )
-        logger.info(f"Learned {len(texts)} items from {source}")
+        # DISABLED for now to save space
+        pass 
 
     async def process_query(self, query, user_name, available_channels=[], server_stats={}, is_ticket=False, chat_history="", search_tool=None, current_channel="", status_callback=None, reaction_callback=None):
         """Main RAG Logic with Smart Search Capability and Anti-Hallucination Guards."""
         
-        # 1. Retrieve relevant info from Public Memory (RAG)
-        results = self.collection.query(query_texts=[query], n_results=3)
-        retrieved_context = "\n".join(results['documents'][0]) if results['documents'] and results['documents'][0] else ""
+        # 1. Retrieve relevant info (NOW USING LIGHTWEIGHT SYSTEM ONLY)
+        # results = self.collection.query(query_texts=[query], n_results=3)
+        # retrieved_context = "\n".join(results['documents'][0]) if results['documents'] and results['documents'][0] else ""
+        retrieved_context = "" # Disabled heavy RAG
         
         # Get server name for context
         server_name = server_stats.get("Server Name", "este servidor")
