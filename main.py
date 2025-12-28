@@ -50,10 +50,6 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    # PRIVACY PROTECTION: Ignore Ticket Channels
-    if "ticket" in message.channel.name.lower():
-        return
-
     # Check if bot is mentioned
     if bot.user.mentioned_in(message) and not message.mention_everyone:
         async with message.channel.typing():
@@ -92,7 +88,9 @@ async def on_message(message):
                     else:
                         return f"AVISO: El canal #{current_channel_name} es el canal actual donde estamos hablando. El historial reciente está vacío o solo contiene tu mensaje."
                 
-                accessible_channels = [c for c in message.guild.text_channels if c.permissions_for(message.guild.me).read_messages]
+                accessible_channels = [c for c in message.guild.text_channels 
+                                     if c.permissions_for(message.guild.me).read_messages 
+                                     and c.permissions_for(message.author).read_messages]
                 
                 # Match target channel if specified
                 search_scope = []
@@ -129,9 +127,10 @@ async def on_message(message):
                     return f"AVISO DEL SISTEMA: No se encontraron mensajes para '{query}' en {target_channel}. NO INVENTES mensajes ni usuarios."
                 return "\n".join(results[:total_limit])
 
-            # Prepare channel list for agent context
+            # Prepare channel list for agent context (Based on USER permissions)
             channel_names = [c.name for c in message.guild.text_channels 
-                           if c.permissions_for(message.guild.me).read_messages]
+                           if c.permissions_for(message.guild.me).read_messages 
+                           and c.permissions_for(message.author).read_messages]
             
             # Prepare Server Stats
             server_stats = {
