@@ -5,7 +5,7 @@ El agente decide cuándo necesita cargar contexto adicional.
 """
 
 # Contextos disponibles que el agente puede solicitar
-AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra", "redes", "descargas", "donar", "tutoriales"]
+AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra", "redes", "descargas", "donar", "tutoriales", "faq_ios_pc", "meuliwind"]
 
 # Base de conocimiento (solo se carga cuando el agente lo pide)
 KNOWLEDGE_DATA = {
@@ -14,7 +14,7 @@ KNOWLEDGE_DATA = {
 • App gratuita con MÍNIMOS anuncios
 • Solo 1 anuncio obligatorio cada 24 horas (puedes evitarlo gastando 1 Goat)
 • ANDROID: Disponible en Google Play Store y como APK
-• iOS (TestFlight): SOLO accesible si rellenaste el formulario y recibiste el email de confirmación.
+• iOS (TestFlight): NO hay botón de descarga directa. Debes ir a meulify.top, rellenar el FORMULARIO y esperar el email.
 • Actualmente en fase beta - feedback bienvenido
 • Web oficial: meulify.top
 • 100% gratis, se financia con donaciones de la comunidad
@@ -87,7 +87,7 @@ KNOWLEDGE_DATA = {
 📥 **DÓNDE DESCARGAR MEULIFY**
 > 🤖 Android y APK
 > 🌌 Samsung Galaxy Store
-> 🍎 iOS (Beta TestFlight): REQUIERE haber rellenado formulario y recibido EMAIL de acceso.
+> 🍎 iOS (Beta TestFlight): Rellena el FORMULARIO en la web. No hay descarga directa.
 👉 Todo disponible oficial y seguro en: https://meulify.top
 """,
 
@@ -104,8 +104,38 @@ Es 100% voluntario, la app siempre será gratis 🙏
 
     "tutoriales": """
 📚 **TUTORIALES Y AYUDA**
-• **Portadas Animadas**: ¿Quieres que tu música se vea increíble?
-  > Mira este tutorial de cómo crear portadas animadas: https://www.youtube.com/watch?v=TI42u0pECcA&t=1s
+• **Portadas Animadas**: 
+  > ⚠️ INSTRUCCIÓN PARA LA IA: NO EXPLIQUES NADA. NO INVENTES PASOS NI COMANDOS.
+  > TU ÚNICA RESPUESTA DEBE SER: "Aquí tienes el tutorial oficial para hacerlo: https://www.youtube.com/watch?v=TI42u0pECcA&t=1s"
+""",
+
+    "faq_ios_pc": """
+🍎 **PREGUNTAS FRECUENTES iOS (iPhone)**
+P: ¿Cómo descargar en iPhone?
+R: Inscríbete en la Beta Privada en `meulify.top`.
+   1. Ve a `meulify.top`, sección "Beta para iPhone".
+   2. Rellena el formulario (Correo Apple ID + Usuario Discord).
+   3. Espera el email de TestFlight.
+
+P: ¿Es automático?
+R: NO. La Cabra revisa una por una. Es un proceso MANUAL.
+
+P: ¿Cuánto tarda?
+R: De 2 a 3 días (a veces semanas). El dev tiene universidad, paciencia. Revisa SPAM.
+
+💻 **PREGUNTAS FRECUENTES PC**
+P: ¿Hay versión para PC (.exe)?
+R: No existe versión nativa aún.
+   > SOLUCIÓN: Usa un emulador de Android (Bluestacks, LDPlayer) para instalar la APK.
+""",
+
+    "meuliwind": """
+🌪️ **MEULIWIND - Tu Resumen Anual**
+• Es el "Wrapped" de Meulify.
+• Un resumen de toda la música que has escuchado durante el año.
+• Estadísticas de tus artistas favoritos, canciones más escuchadas y minutos totales.
+• Se genera automáticamente a final de año para que lo compartas en redes.
+• ¡Descubre qué tanto flow has tenido este año!
 """,
 }
 
