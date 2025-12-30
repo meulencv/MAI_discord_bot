@@ -2,8 +2,10 @@ import discord
 from discord.ext import commands
 import os
 from dotenv import load_dotenv
-from agent_logic import AgentLogic
 import logging
+from proxy_manager import get_webshare_proxy
+import asyncio
+from agent_logic import AgentLogic
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -228,8 +230,24 @@ async def index_channel(ctx, channel_id: int):
     else:
         await ctx.send("No valid messages found to index.")
 
-if __name__ == '__main__':
+async def start_bot():
     if not TOKEN:
-        print("Error: DISCORD_TOKEN not found in .env")
+        logger.error("DISCORD_TOKEN not found!")
+        return
+
+    # Usar proxy directamente para evitar bloqueos de Render
+    logger.info("Fetching proxy for direct connection...")
+    proxy_url = await get_webshare_proxy()
+    
+    if proxy_url:
+        logger.info("Starting bot with Webshare Proxy...")
+        await bot.start(TOKEN, proxy=proxy_url)
     else:
-        bot.run(TOKEN)
+        logger.warning("Proxy not available, attempting direct connection...")
+        await bot.start(TOKEN)
+
+if __name__ == '__main__':
+    try:
+        asyncio.run(start_bot())
+    except KeyboardInterrupt:
+        pass
