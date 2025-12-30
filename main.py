@@ -3,7 +3,7 @@ from discord.ext import commands
 import os
 from dotenv import load_dotenv
 import logging
-from proxy_manager import get_webshare_proxy
+from proxy_manager import get_webshare_proxy_sync
 import asyncio
 from agent_logic import AgentLogic
 
@@ -20,7 +20,8 @@ intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
 
-bot = commands.Bot(command_prefix='!mai_', intents=intents)
+PROXY_URL = get_webshare_proxy_sync()
+bot = commands.Bot(command_prefix='!mai_', intents=intents, proxy=PROXY_URL)
 agent = AgentLogic()
 
 # --- KOYEB/RENDER HEALTH CHECK FIX ---
@@ -235,16 +236,9 @@ async def start_bot():
         logger.error("DISCORD_TOKEN not found!")
         return
 
-    # Usar proxy directamente para evitar bloqueos de Render
-    logger.info("Fetching proxy for direct connection...")
-    proxy_url = await get_webshare_proxy()
-    
-    if proxy_url:
-        logger.info("Starting bot with Webshare Proxy...")
-        await bot.start(TOKEN, proxy=proxy_url)
-    else:
-        logger.warning("Proxy not available, attempting direct connection...")
-        await bot.start(TOKEN)
+    # Iniciar bot (el proxy ya está configurado en el constructor)
+    logger.info(f"Starting bot (Proxy: {'Enabled' if PROXY_URL else 'Disabled'})...")
+    await bot.start(TOKEN)
 
 if __name__ == '__main__':
     try:

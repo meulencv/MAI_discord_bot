@@ -1,8 +1,30 @@
 import os
 import aiohttp
 import logging
+import requests
 
 logger = logging.getLogger('ProxyManager')
+
+def get_webshare_proxy_sync():
+    """Synchronous version for bot initialization."""
+    token = os.getenv('WEBSHARE_TOKEN') or os.getenv('PROXY')
+    if not token:
+        return None
+    
+    url = "https://proxy.webshare.io/api/v2/proxy/list/?mode=direct"
+    headers = {"Authorization": f"Token {token}"}
+    
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            data = response.json()
+            results = data.get('results', [])
+            if results:
+                p = results[0]
+                return f"http://{p['username']}:{p['password']}@{p['proxy_address']}:{p['port']}"
+    except:
+        pass
+    return None
 
 async def get_webshare_proxy():
     """Fetches the first available proxy from Webshare API."""
@@ -11,7 +33,7 @@ async def get_webshare_proxy():
         logger.error("WEBSHARE_TOKEN or PROXY not found in environment variables.")
         return None
 
-    url = "https://proxy.webshare.io/api/v2/proxy/list/"
+    url = "https://proxy.webshare.io/api/v2/proxy/list/?mode=direct"
     headers = {"Authorization": f"Token {token}"}
 
     try:
