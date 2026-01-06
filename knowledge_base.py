@@ -14,7 +14,7 @@ KNOWLEDGE_DATA = {
 • App gratuita con MÍNIMOS anuncios
 • Solo 1 anuncio obligatorio cada 24 horas (puedes evitarlo gastando 1 Goat)
 • ANDROID: Disponible en Google Play Store y como APK
-• iOS (TestFlight): NO hay botón de descarga directa. Debes ir a meulify.top, rellenar el FORMULARIO y esperar el email.
+• iOS (iPhone): ¡YA DISPONIBLE EN APP STORE! Link en meulify.top
 • Actualmente en fase beta - feedback bienvenido
 • Web oficial: meulify.top
 • 100% gratis, se financia con donaciones de la comunidad
@@ -87,7 +87,7 @@ KNOWLEDGE_DATA = {
 📥 **DÓNDE DESCARGAR MEULIFY**
 > 🤖 Android y APK
 > 🌌 Samsung Galaxy Store
-> 🍎 iOS (Beta TestFlight): Rellena el FORMULARIO en la web. No hay descarga directa.
+> 🍎 iOS (iPhone): ¡YA EN APP STORE! Descárgala desde el link en meulify.top
 👉 Todo disponible oficial y seguro en: https://meulify.top
 """,
 
@@ -112,16 +112,12 @@ Es 100% voluntario, la app siempre será gratis 🙏
     "faq_ios_pc": """
 🍎 **PREGUNTAS FRECUENTES iOS (iPhone)**
 P: ¿Cómo descargar en iPhone?
-R: Inscríbete en la Beta Privada en `meulify.top`.
-   1. Ve a `meulify.top`, sección "Beta para iPhone".
-   2. Rellena el formulario (Correo Apple ID + Usuario Discord).
-   3. Espera el email de TestFlight.
+R: ¡Ya está disponible en la App Store! Ve a meulify.top y encontrarás el link de descarga.
 
-P: ¿Es automático?
-R: NO. La Cabra revisa una por una. Es un proceso MANUAL.
-
-P: ¿Cuánto tarda?
-R: De 2 a 3 días (a veces semanas). El dev tiene universidad, paciencia. Revisa SPAM.
+P: ¿Hay beta testing / TestFlight?
+R: Sí, existe TestFlight para usuarios que quieran probar funciones antes que nadie.
+   Para unirte a la beta: Ve a meulify.top, rellena el formulario de beta y espera el email.
+   (Esto es SOLO para beta testers, la app normal ya está en App Store)
 
 💻 **PREGUNTAS FRECUENTES PC**
 P: ¿Hay versión para PC (.exe)?
