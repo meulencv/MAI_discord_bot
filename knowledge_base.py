@@ -5,134 +5,153 @@ El agente decide cuándo necesita cargar contexto adicional.
 """
 
 # Contextos disponibles que el agente puede solicitar
-AVAILABLE_CONTEXTS = ["meulify", "mai", "features", "community", "goats", "cabra", "redes", "descargas", "donar", "tutoriales", "faq_ios_pc", "meuliwind"]
+AVAILABLE_CONTEXTS = [
+    "meulify", "mai", "features", "goats", "cabra", "redes", 
+    "descargas_ios", "descargas_android", "pc_smarttv", 
+    "troubleshooting", "faq_general", "privacy", "tutoriales", "meuliwind"
+]
 
 # Base de conocimiento (solo se carga cuando el agente lo pide)
 KNOWLEDGE_DATA = {
     "meulify": """
 🎵 MEULIFY - Reproductor de Música
-• App gratuita con MÍNIMOS anuncios
-• Solo 1 anuncio obligatorio cada 24 horas (puedes evitarlo gastando 1 Goat)
-• ANDROID: Disponible en Google Play Store y como APK
-• iOS (iPhone): ¡YA DISPONIBLE EN APP STORE! Link en meulify.top
-• Actualmente en fase beta - feedback bienvenido
+• App de música gratuita creada por la comunidad para la comunidad.
+• Desarrollador principal: La Cabra 🐐.
+• Estado: Beta (iOS TestFlight / Android Alpha y APK).
 • Web oficial: meulify.top
-• 100% gratis, se financia con donaciones de la comunidad
-• Política de privacidad: NO vendemos datos de usuarios
-• Creada por La Cabra 🐐 (el crack que lleva todo esto)
+• Financiación: Donaciones voluntarias (Ko-fi) y un anuncio diario opcional.
 """,
 
     "mai": """
-🤖 M.A.I. - Meulify Artificial Intelligence
-• SOY YO! La IA oficial de Meulify
-• Estoy integrada en la app para recomendarte música
-• Aprendo de tus gustos y te sugiero temas que te fliparán
-• También estoy aquí en Discord para ayudaros
-• Fui creada por La Cabra 🐐 (mi padre/creador/dios)
-• Mi misión: que encuentres música que mole y pasarlo bien
+🤖 M.A.I. (Meulify Artificial Intelligence)
+• Soy la IA oficial de Meulify, creada por La Cabra 🐐.
+• Mi misión es ayudar a la comunidad, recomendar música y resolver dudas.
+• IMPORTANTE: A veces me equivoco. Si la información no está en mi base de datos, debo decir "NO SÉ LA RESPUESTA".
+• No debo inventar pasos ni tutoriales.
 """,
 
     "features": """
-✨ CARACTERÍSTICAS DE MEULIFY
-• Reproducción casi sin interrupciones
-• Solo 1 anuncio al día (saltable con Goats)
-• Listas de reproducción ILIMITADAS
-• Interfaz moderna y fácil de usar
-• Navegación rápida y fluida
-• Yo (M.A.I.) con recomendaciones personalizadas
-• Totalmente GRATIS - sin suscripciones
-• Modo offline disponible
-""",
-
-    "community": """
-👥 COMUNIDAD MEULIFY
-• Servidor de Discord activo (¡estás aquí!)
-• Comparte tu experiencia con otros usuarios
-• Reporta bugs y sugiere mejoras
-• Contacto directo con La Cabra 🐐
-• Eventos y novedades de la app
+✨ FUNCIONALIDADES Y USO
+• **Modo Offline**: No se puede descargar música directamente. Debes tener tus MP3 y usar "Importar archivos locales".
+• **Importar de Spotify**: Opción "Importar" en el feed. A veces falla si no encuentra la canción en YouTube.
+• **Límite Playlist**: 1000 canciones máximo.
+• **Portadas Animadas**: Posible, pero gasta más batería. Tutorial en #faqs.
+• **Cambiar Imagen Playlist**: Usa URL de imagen (ej: imgbb) en configuración de playlist.
+• **Historial**: Haz clic en la canción para que se registre.
+• **Sincronización**: Automática cada 5 min. Forzar con botón verde en ajustes (primero dispositivo origen, luego destino).
+• **Eliminar Canción**: Desliza a la izquierda sobre la canción en la lista.
+• **Compartir Playlist**: No hay link nativo. Usa la misma cuenta para compartir biblioteca.
 """,
 
     "goats": """
-🐐 SISTEMA DE GOATS (Cabras)
-• Moneda virtual dentro de Meulify
-• Se llaman así en honor a La Cabra, nuestro creador
-• Se usan para saltar el anuncio diario obligatorio
-• Desbloquean funciones sociales y personalización
-• Se ganan viendo anuncios voluntarios
-• NO hay contenido de pago obligatorio
-• Sistema 100% opcional para apoyar la app
+🐐 GOATS (Moneda Virtual)
+• Sirven para saltar el anuncio diario o comprar cosméticos.
+• Se consiguen viendo anuncios o donando.
+• Todo el contenido esencial es GRATIS. Los Goats son opcionales.
 """,
 
     "cabra": """
-🐐 LA CABRA - El Creador Legendario
-• Es el creador y desarrollador de Meulify
-• También conocido como "el crack", "el dios todopoderoso", "el master"
-• Lleva todo esto él solo (un auténtico máquina)
-• Creó tanto la app como a mí (M.A.I.)
-• Hay que respetarle MUCHO, es literal un dios
-• Si le ves por el Discord, hazle una reverencia 🙇
-• Sin él no existiría nada de esto, es THE GOAT 🐐
+🐐 LA CABRA
+• El creador y desarrollador único de Meulify.
+• Una leyenda, un máquina, un dios.
+• Hay que tenerle paciencia porque tiene vida (universidad, etc.) y hace esto por amor al arte.
 """,
 
     "redes": """
-📱 **REDES SOCIALES DE MEULIFY**
-> 🎵 TikTok: Busca @meulify
-> 📸 Instagram: Busca meulify.top
-> ✈️ Telegram: Busca meulify
-¡Síguenos para novedades, memes y contenido exclusivo! (Enlaces en meulify.top)
+📱 REDES SOCIALES
+• Web: meulify.top
+• TikTok: @meulify
+• Instagram: meulify.top
+• Ko-fi (Donaciones): ko-fi.com/meulify
 """,
 
-    "descargas": """
-📥 **DÓNDE DESCARGAR MEULIFY**
-> 🤖 Android y APK
-> 🌌 Samsung Galaxy Store
-> 🍎 iOS (iPhone): ¡YA EN APP STORE! Descárgala desde el link en meulify.top
-👉 Todo disponible oficial y seguro en: https://meulify.top
+    "descargas_ios": """
+🍎 INSTALACIÓN iOS (iPhone)
+• **App Store (Oficial)**: ¡Sí! Está disponible. Busca "Meulify" en la App Store y descárgala normal.
+• **Betas / Alphas (TestFlight)**: Si quieres probar funciones nuevas antes que nadie, usa TestFlight.
+    - *¿Cómo entrar?*: Busca el enlace directo que envía La Cabra 🐐 en canales como `#anuncios` o `#alphas`.
+    - *Nota*: No hace falta formulario.
+• **Error Login**: Si falla al entrar, prueba a registrarte con correo/contraseña dentro de la app.
+• **Fallos Comunes**:
+    - *Música se para/corta*: Bug gestión de memoria iOS. Se intenta arreglar en cada versión.
+    - *Sin controles bloqueo*: Bug de betas iOS.
+    - *Batería*: Portadas animadas consumen más (especialmente iPhone 16).
+    - *Isla Dinámica*: A veces falla visualmente.
 """,
 
-    "donar": """
-💝 **APOYAR A MEULIFY**
-> ☕ Puedes invitarnos a un café (Ko-fi)
+    "descargas_android": """
+🤖 INSTALACIÓN ANDROID
+• **Descarga**: Google Play Store, Galaxy Store o APK en Discord (#alphas).
+• **Versión Alpha**: Pide rol "beta tester" en #roles -> canal #alphas.
+• **Error "Conflicto de paquetes"**: Tienes una versión vieja (ej: Play Store) y quieres instalar Alpha. --> DESINSTALA LA VIEJA PRIMERO.
+• **Play Protect**: Si bloquea, desactívalo o dale a "Instalar de todas formas".
+• **Android Auto**: No soportado aún.
+""",
 
-Las donaciones ayudan a:
-• Mantener los servidores
-• Desarrollar nuevas funciones
-• Que La Cabra 🐐 pueda seguir trabajando en esto
-Es 100% voluntario, la app siempre será gratis 🙏
+    "pc_smarttv": """
+💻 PC / TV / OTROS
+• **PC (Windows/Mac)**: NO hay versión nativa.
+    - *Solución*: Usa emulador Android (BlueStacks, LDPlayer) o Waydroid (Linux).
+    - *Web*: No existe versión web.
+• **Chromebook**: Funciona mal (pantalla negra, crasheos). Borrar caché ayuda temporalmente.
+• **Smart TV**: No nativa. Samsung Dex funciona.
+• **CarPlay / Android Auto**: No soportado.
+""",
+
+    "troubleshooting": """
+🛠️ SOLUCIÓN DE ERRORES (TROUBLESHOOTING)
+• **Música se para al salir/bloquear**:
+    - *Android*: Quita restricción batería y activa "Notificación segundo plano" en ajustes Meulify.
+    - *iOS*: Bug conocido de TestFlight. Espera update.
+• **Pantalla Blanca/Negra o No Carga**:
+    - Borrar caché y datos de la app.
+    - Reinstalar última versión.
+    - *Chromebook*: Error muy común, difícil solución definitiva.
+• **Login Error / Captcha**:
+    - Caída servidores (Cloudflare).
+    - Cambia WiFi/Datos.
+    - Revisa correo.
+    - "Invalid login credentials": Desinstala versión vieja e instala la nueva de cero.
+• **Artista Desconocido**: Bug visual. Borra y re-añade canción.
+• **Buscador no va**: Cambia pestaña Música<->Video o instala última Alpha.
+• **Importar Playlist Falla**:
+    - Límite excedido (>1000 canciones).
+    - Canciones no encontradas en YouTube.
+• **Escucho Video/Intro en vez de Canción**:
+    - La app usa base de datos de YouTube. A veces pilla el videoclip.
+    - Solución: Usar "Mods" para asignar link correcto.
+• **Anuncio repetido**: Es cada 24h POR DISPOSITIVO.
+""",
+
+    "privacy": """
+🔒 PRIVACIDAD Y DATOS
+• **¿Segura?**: Sí, no se venden datos. Proyecto personal.
+• **Perder Playlists al borrar**:
+    - **SÍ PUEDES PERDERLAS**.
+    - La cuenta (login) *ya no* guarda playlists en el servidor automáticamente (para no saturar).
+    - **SOLUCIÓN OBLIGATORIA**: Vincula **Google Drive** en ajustes para backup.
+    - Canciones descargadas (MP3): Se pierden si borras la app (son archivos locales).
 """,
 
     "tutoriales": """
-📚 **TUTORIALES Y AYUDA**
-• **Portadas Animadas**: 
-  > ⚠️ INSTRUCCIÓN PARA LA IA: NO EXPLIQUES NADA. NO INVENTES PASOS NI COMANDOS.
-  > TU ÚNICA RESPUESTA DEBE SER: "Aquí tienes el tutorial oficial para hacerlo: https://www.youtube.com/watch?v=TI42u0pECcA&t=1s"
-""",
-
-    "faq_ios_pc": """
-🍎 **PREGUNTAS FRECUENTES iOS (iPhone)**
-P: ¿Cómo descargar en iPhone?
-R: ¡Ya está disponible en la App Store! Ve a meulify.top y encontrarás el link de descarga.
-
-P: ¿Hay beta testing / TestFlight?
-R: Sí, existe TestFlight para usuarios que quieran probar funciones antes que nadie.
-   Para unirte a la beta: Ve a meulify.top, rellena el formulario de beta y espera el email.
-   (Esto es SOLO para beta testers, la app normal ya está en App Store)
-
-💻 **PREGUNTAS FRECUENTES PC**
-P: ¿Hay versión para PC (.exe)?
-R: No existe versión nativa aún.
-   > SOLUCIÓN: Usa un emulador de Android (Bluestacks, LDPlayer) para instalar la APK.
+📚 **TUTORIALES**
+• **Portadas Animadas**: No inventes pasos. Link tutorial: [Buscar en canal youtube de meulify si existe, por ahora di que miren en #faqs]
+    - *Nota interna*: Instrucción del usuario "NO EXPLIQUES NADA. NO INVENTES". Remitir a #faqs o canal específico.
 """,
 
     "meuliwind": """
-🌪️ **MEULIWIND - Tu Resumen Anual**
-• Es el "Wrapped" de Meulify.
-• Un resumen de toda la música que has escuchado durante el año.
-• Estadísticas de tus artistas favoritos, canciones más escuchadas y minutos totales.
-• Se genera automáticamente a final de año para que lo compartas en redes.
-• ¡Descubre qué tanto flow has tenido este año!
+🌪️ MEULIWIND (Rewind)
+• Resumen anual de estadísticas.
+• Sale a final/principio de año.
+• Ver en Feed -> Meuliwind -> Free anual.
 """,
+    
+    "faq_general": """
+❓ OTRAS PREGUNTAS
+• **¿Código Abierto?**: Cerrado (No hay confirmación de open source).
+• **¿Cuándo sale oficial?**: Depende de bugs. "Coming soon".
+• **¿Donar falla?**: Botones nativos a veces fallan. Usa la web oficial o Ko-fi.
+"""
 }
 
 def get_context(context_name: str) -> str:
@@ -140,10 +159,33 @@ def get_context(context_name: str) -> str:
     Devuelve el contexto solicitado por el agente.
     """
     context_name = context_name.lower().strip()
-    if context_name in KNOWLEDGE_DATA:
-        return KNOWLEDGE_DATA[context_name]
-    elif context_name == "all":
-        return "\n".join(KNOWLEDGE_DATA.values())
+    
+    # Alias para facilitar la búsqueda del agente
+    aliases = {
+        "ios": "descargas_ios",
+        "iphone": "descargas_ios",
+        "android": "descargas_android",
+        "apk": "descargas_android",
+        "pc": "pc_smarttv",
+        "windows": "pc_smarttv",
+        "mac": "pc_smarttv",
+        "tv": "pc_smarttv",
+        "bugs": "troubleshooting",
+        "errores": "troubleshooting",
+        "fallos": "troubleshooting",
+        "privacidad": "privacy",
+        "datos": "privacy",
+        "backup": "privacy",
+        "drive": "privacy"
+    }
+    
+    target = aliases.get(context_name, context_name)
+    
+    if target in KNOWLEDGE_DATA:
+        return KNOWLEDGE_DATA[target]
+    elif target == "all":
+        return "\\n".join(KNOWLEDGE_DATA.values())
+    
     return f"Contexto '{context_name}' no encontrado. Disponibles: {', '.join(AVAILABLE_CONTEXTS)}"
 
 
