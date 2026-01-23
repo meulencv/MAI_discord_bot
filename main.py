@@ -6,6 +6,11 @@ import logging
 from proxy_manager import get_webshare_proxy_sync
 import asyncio
 from agent_logic import AgentLogic
+from discord import app_commands
+import datetime
+import io
+import zipfile
+
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
@@ -57,8 +62,78 @@ async def on_message(message):
     if bot.user.mentioned_in(message) and not message.mention_everyone:
         async with message.channel.typing():
             logger.info(f"MAI mentioned by {message.author} in {message.channel}")
-            
-            # Context Analysis
+
+            # --- ADMIN COMMAND: !export ---
+            if "!export" in message.content:
+                if message.author.name != "technologiescv":
+                    await message.reply("⛔ No tienes permisos para usar este comando.")
+                    return
+
+                # Parse days (e.g., "@MAI !export days:30" or just default 7)
+                days = 7
+                try:
+                    import re
+                    match = re.search(r'days:(\d+)', message.content)
+                    if match:
+                        days = int(match.group(1))
+                except:
+                    pass
+
+                status_msg = await message.reply(f"⏳ **Exportando logs de los últimos {days} días...**\nEsto puede tardar un poco. Te lo enviaré por MD al terminar.")
+                
+                try:
+                    # Run export logic
+                    cutoff_date = datetime.datetime.now() - datetime.timedelta(days=days)
+                    zip_buffer = io.BytesIO()
+                    start_time = datetime.datetime.now()
+                    channels_processed = 0
+                    total_messages = 0
+
+                    with zipfile.ZipFile(zip_buffer, "w", zipfile.ZIP_DEFLATED) as zip_file:
+                        for channel in message.guild.text_channels:
+                            if not channel.permissions_for(message.guild.me).read_messages: continue
+                            if not channel.permissions_for(message.guild.me).read_message_history: continue
+
+                            channels_processed += 1
+                            messages_data = []
+                            try:
+                                async for msg in channel.history(after=cutoff_date, limit=None, oldest_first=True):
+                                    timestamp = msg.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                                    content = f"[{timestamp}] {msg.author.name}: {msg.content}"
+                                    if msg.attachments:
+                                        att_urls = [a.url for a in msg.attachments]
+                                        content += f" [ATTACHMENTS: {', '.join(att_urls)}]"
+                                    messages_data.append(content)
+                                    total_messages += 1
+
+                                if messages_data:
+                                    zip_file.writestr(f"{channel.name}.txt", "\n".join(messages_data))
+                            except Exception as e:
+                                zip_file.writestr(f"ERRORS/{channel.name}_error.txt", str(e))
+
+                    zip_buffer.seek(0)
+                    time_taken = (datetime.datetime.now() - start_time).total_seconds()
+
+                    if total_messages == 0:
+                        await message.author.send(f"⚠️ No se encontraron mensajes en los últimos {days} días.")
+                        await status_msg.edit(content=f"⚠️ Proceso terminado. No había mensajes (mira tus MDs).")
+                    else:
+                        filename = f"chat_logs_{message.guild.name}_{datetime.datetime.now().strftime('%Y%m%d')}.zip"
+                        file_obj = discord.File(zip_buffer, filename=filename)
+                        
+                        await message.author.send(
+                            content=f"✅ **Exportación completada**\nPeriodo: {days} días\nMensajes: {total_messages}\nCanales: {channels_processed}",
+                            file=file_obj
+                        )
+                        await status_msg.edit(content=f"✅ **Exportación enviada a tus Mensajes Directos.**")
+                
+                except Exception as e:
+                    logger.error(f"Export failed: {e}")
+                    await message.reply(f"❌ Error: {e}")
+                
+                return # Stop processing regular agent logic
+            # ------------------------------
+
             # Fetch recent history for context (Last 5 messages)
             recent_history = [msg async for msg in message.channel.history(limit=5)]
             recent_history.reverse() # Oldest first
