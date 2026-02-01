@@ -2,6 +2,7 @@ import os
 import aiohttp
 import logging
 import requests
+import random
 
 logger = logging.getLogger('ProxyManager')
 
@@ -20,6 +21,7 @@ def get_webshare_proxy_sync():
             data = response.json()
             results = data.get('results', [])
             if results:
+                random.shuffle(results)
                 p = results[0]
                 return f"http://{p['username']}:{p['password']}@{p['proxy_address']}:{p['port']}"
     except:
@@ -43,9 +45,10 @@ async def get_webshare_proxy():
                     data = await response.json()
                     results = data.get('results', [])
                     if results:
-                        p = results[0]  # Take the first one
+                        random.shuffle(results)
+                        p = results[0]  # Take a random one
                         proxy_url = f"http://{p['username']}:{p['password']}@{p['proxy_address']}:{p['port']}"
-                        logger.info(f"Successfully fetched proxy: {p['proxy_address']}")
+                        logger.info(f"Successfully fetched random proxy: {p['proxy_address']}")
                         return proxy_url
                     else:
                         logger.warning("No proxies found in Webshare account.")
